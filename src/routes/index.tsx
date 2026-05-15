@@ -1,26 +1,28 @@
+import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { DashboardCards } from "@/components/dashboard/DashboardCards";
+import { StatusDonutChart } from "@/components/dashboard/StatusDonutChart";
+import { AlertsDonutChart } from "@/components/dashboard/AlertsDonutChart";
+import { PaperDonutChart } from "@/components/dashboard/PaperDonutChart";
+import { PrintersTable } from "@/components/dashboard/PrintersTable";
+import { PrinterDetailModal } from "@/components/dashboard/PrinterDetailModal";
+import type { Printer } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/")({
-  component: Index,
-});
+export const Route = createFileRoute("/")({ component: Dashboard });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Dashboard() {
+  const [selected, setSelected] = React.useState<Printer | null>(null);
+  const [open, setOpen] = React.useState(false);
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="mx-auto flex max-w-[1400px] flex-col gap-6">
+      <DashboardCards />
+      <div className="grid gap-4 xl:grid-cols-3">
+        <StatusDonutChart />
+        <AlertsDonutChart />
+        <PaperDonutChart />
+      </div>
+      <PrintersTable onSelect={(p) => { setSelected(p); setOpen(true); }} />
+      <PrinterDetailModal printer={selected} open={open} onOpenChange={setOpen} />
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
