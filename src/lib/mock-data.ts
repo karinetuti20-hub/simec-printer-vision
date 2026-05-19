@@ -204,6 +204,14 @@ export function paperConsumption(period: PaperPeriod) {
   const days = period === "year" ? 365 : period === "month" ? 30 : 7;
   const dailyAvg = Math.round(grandTotal / days);
 
+  // Previous-period comparison (seeded, deterministic mock)
+  const prevFactor =
+    period === "week" ? 0.92 : period === "month" ? 1.08 : 0.95;
+  const prevTotal = Math.round(grandTotal * prevFactor);
+  const prevDailyAvg = Math.round(prevTotal / days);
+  const totalDelta = prevTotal > 0 ? ((grandTotal - prevTotal) / prevTotal) * 100 : 0;
+  const dailyDelta = prevDailyAvg > 0 ? ((dailyAvg - prevDailyAvg) / prevDailyAvg) * 100 : 0;
+
   const top5 = [...perPrinter].sort((a, b) => b.total - a.total).slice(0, 5);
 
   const table = perPrinter
@@ -217,5 +225,5 @@ export function paperConsumption(period: PaperPeriod) {
     }))
     .sort((a, b) => b.pages - a.pages);
 
-  return { labels, top5, table, grandTotal, dailyAvg };
+  return { labels, top5, table, grandTotal, dailyAvg, totalDelta, dailyDelta };
 }
