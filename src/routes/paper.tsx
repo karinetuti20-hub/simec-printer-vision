@@ -24,7 +24,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { FileStack, TrendingUp, BarChart3, LineChart as LineIcon, Search } from "lucide-react";
+import { FileStack, TrendingUp, BarChart3, LineChart as LineIcon, Search, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { paperConsumption, type PaperPeriod } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
