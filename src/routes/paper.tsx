@@ -117,6 +117,7 @@ function PaperPage() {
             <div className="text-3xl font-semibold tracking-tight tabular-nums">
               {fmt(data.grandTotal)}
             </div>
+            <DeltaBadge delta={data.totalDelta} />
             <p className="mt-1 text-xs text-muted-foreground">
               folhas impressas {periodLabel}
             </p>
