@@ -40,6 +40,29 @@ const SERIES_COLORS = [
 
 const fmt = (n: number) => n.toLocaleString("pt-BR");
 
+function DeltaBadge({ delta }: { delta: number }) {
+  const up = delta >= 0;
+  const Icon = up ? ArrowUpRight : ArrowDownRight;
+  const sign = up ? "+" : "";
+  return (
+    <div className="mt-2 flex items-center gap-1.5">
+      <span
+        className={cn(
+          "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[11px] font-medium tabular-nums",
+          up
+            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+            : "bg-rose-500/10 text-rose-600 dark:text-rose-400",
+        )}
+      >
+        <Icon className="h-3 w-3" />
+        {sign}
+        {delta.toFixed(1).replace(".", ",")}%
+      </span>
+      <span className="text-[11px] text-muted-foreground">vs período anterior</span>
+    </div>
+  );
+}
+
 function PaperPage() {
   const [period, setPeriod] = React.useState<PaperPeriod>("month");
   const [chartType, setChartType] = React.useState<"line" | "bar">("line");
