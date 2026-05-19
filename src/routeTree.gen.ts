@@ -13,6 +13,7 @@ import { Route as TonersRouteImport } from './routes/toners'
 import { Route as SuppliesRouteImport } from './routes/supplies'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrintersRouteImport } from './routes/printers'
+import { Route as PaperRouteImport } from './routes/paper'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -36,6 +37,11 @@ const PrintersRoute = PrintersRouteImport.update({
   path: '/printers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaperRoute = PaperRouteImport.update({
+  id: '/paper',
+  path: '/paper',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -50,6 +56,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
+  '/paper': typeof PaperRoute
   '/printers': typeof PrintersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/supplies': typeof SuppliesRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
+  '/paper': typeof PaperRoute
   '/printers': typeof PrintersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/supplies': typeof SuppliesRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
+  '/paper': typeof PaperRoute
   '/printers': typeof PrintersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/supplies': typeof SuppliesRoute
@@ -77,16 +86,25 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/history'
+    | '/paper'
     | '/printers'
     | '/sitemap.xml'
     | '/supplies'
     | '/toners'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/history' | '/printers' | '/sitemap.xml' | '/supplies' | '/toners'
+  to:
+    | '/'
+    | '/history'
+    | '/paper'
+    | '/printers'
+    | '/sitemap.xml'
+    | '/supplies'
+    | '/toners'
   id:
     | '__root__'
     | '/'
     | '/history'
+    | '/paper'
     | '/printers'
     | '/sitemap.xml'
     | '/supplies'
@@ -96,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HistoryRoute: typeof HistoryRoute
+  PaperRoute: typeof PaperRoute
   PrintersRoute: typeof PrintersRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SuppliesRoute: typeof SuppliesRoute
@@ -132,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/paper': {
+      id: '/paper'
+      path: '/paper'
+      fullPath: '/paper'
+      preLoaderRoute: typeof PaperRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -152,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HistoryRoute: HistoryRoute,
+  PaperRoute: PaperRoute,
   PrintersRoute: PrintersRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SuppliesRoute: SuppliesRoute,
@@ -160,13 +187,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

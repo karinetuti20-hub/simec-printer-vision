@@ -153,3 +153,69 @@ export function paperChart() {
     percent: (p.pages / totalTop) * 100,
   }));
 }
+
+export type PaperPeriod = "week" | "month" | "year";
+
+function seeded(n: number) {
+  const x = Math.sin(n) * 10000;
+  return x - Math.floor(x);
+}
+
+/**
+ * Generates a per-printer consumption series for the requested period.
+ * - week  : 7 daily buckets
+ * - month : 30 daily buckets
+ * - year  : 12 monthly buckets
+ */
+export function paperConsumption(period: PaperPeriod) {
+  const buckets =
+    period === "week" ? 7 : period === "month" ? 30 : 12;
+  const labels: string[] =
+    period === "year"
+      ? ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+      : Array.from({ length: buckets }).map((_, i) => {
+          const d = new Date();
+          d.setDate(d.getDate() - (buckets - 1 - i));
+          return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+        });
+
+  // Per-printer scaled totals for the period
+  const scale = period === "week" ? 0.05 : period === "month" ? 0.22 : 1;
+
+  const perPrinter = printers.map((p) => {
+    const total = Math.round(p.pages * scale);
+    // distribute across buckets with seeded variance
+    const weights = Array.from({ length: buckets }).map(
+      (_, i) => 0.5 + seeded(p.id * 31 + i * 7),
+    );
+    const sumW = weights.reduce((a, b) => a + b, 0);
+    const series = weights.map((w) => Math.round((w / sumW) * total));
+    return {
+      id: p.id,
+      name: p.name,
+      ip: p.ip,
+      location: p.location,
+      series,
+      total: series.reduce((a, b) => a + b, 0),
+    };
+  });
+
+  const grandTotal = perPrinter.reduce((s, p) => s + p.total, 0);
+  const days = period === "year" ? 365 : period === "month" ? 30 : 7;
+  const dailyAvg = Math.round(grandTotal / days);
+
+  const top5 = [...perPrinter].sort((a, b) => b.total - a.total).slice(0, 5);
+
+  const table = perPrinter
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      ip: p.ip,
+      location: p.location,
+      pages: p.total,
+      percent: grandTotal > 0 ? (p.total / grandTotal) * 100 : 0,
+    }))
+    .sort((a, b) => b.pages - a.pages);
+
+  return { labels, top5, table, grandTotal, dailyAvg };
+}
