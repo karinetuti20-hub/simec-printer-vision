@@ -3,13 +3,14 @@ import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, SidebarFooter, useSidebar,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Printer, Droplets, Boxes, History, ExternalLink } from "lucide-react";
+import { LayoutDashboard, Printer, Droplets, Boxes, History, ExternalLink, FileStack } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Impressoras", url: "/printers", icon: Printer },
   { title: "Toners", url: "/toners", icon: Droplets },
+  { title: "Papel", url: "/paper", icon: FileStack },
   { title: "Suprimentos", url: "/supplies", icon: Boxes },
   { title: "Histórico", url: "/history", icon: History },
 ] as const;
