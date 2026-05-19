@@ -138,6 +138,7 @@ function PaperPage() {
             <div className="text-3xl font-semibold tracking-tight tabular-nums">
               {fmt(data.dailyAvg)}
             </div>
+            <DeltaBadge delta={data.dailyDelta} />
             <p className="mt-1 text-xs text-muted-foreground">
               folhas / dia {periodLabel}
             </p>
