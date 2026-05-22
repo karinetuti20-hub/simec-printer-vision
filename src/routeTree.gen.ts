@@ -14,6 +14,7 @@ import { Route as SuppliesRouteImport } from './routes/supplies'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrintersRouteImport } from './routes/printers'
 import { Route as PaperRouteImport } from './routes/paper'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -42,6 +43,11 @@ const PaperRoute = PaperRouteImport.update({
   path: '/paper',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -56,6 +62,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
+  '/login': typeof LoginRoute
   '/paper': typeof PaperRoute
   '/printers': typeof PrintersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
+  '/login': typeof LoginRoute
   '/paper': typeof PaperRoute
   '/printers': typeof PrintersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/history': typeof HistoryRoute
+  '/login': typeof LoginRoute
   '/paper': typeof PaperRoute
   '/printers': typeof PrintersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/history'
+    | '/login'
     | '/paper'
     | '/printers'
     | '/sitemap.xml'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/history'
+    | '/login'
     | '/paper'
     | '/printers'
     | '/sitemap.xml'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/history'
+    | '/login'
     | '/paper'
     | '/printers'
     | '/sitemap.xml'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HistoryRoute: typeof HistoryRoute
+  LoginRoute: typeof LoginRoute
   PaperRoute: typeof PaperRoute
   PrintersRoute: typeof PrintersRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaperRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HistoryRoute: HistoryRoute,
+  LoginRoute: LoginRoute,
   PaperRoute: PaperRoute,
   PrintersRoute: PrintersRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -187,3 +208,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
