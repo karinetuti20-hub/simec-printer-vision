@@ -3,7 +3,7 @@ import { Loader2, Lock, User, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import logoSrc from "/static/imgs/simec-logo.png?url";
+const logoSrc = "/static/imgs/simec-logo.png";
 
 export function LoginCard({ logoAnimated }: { logoAnimated: boolean }) {
   const [username, setUsername] = useState("");
