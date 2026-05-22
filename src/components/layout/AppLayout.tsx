@@ -18,6 +18,11 @@ export function AppLayout() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const meta = titles[pathname] ?? { title: "Portal SIMEC", sub: "" };
 
+  // Auth/public routes render without app chrome
+  if (pathname === "/login") {
+    return <Outlet />;
+  }
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background">
